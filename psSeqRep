@@ -22,18 +22,17 @@ Begin{
             $this.end = $end
         }
 
-        [boolean]testEqn($eqn, $search){
+        [string]testEqn($eqn, $search){
             if($this.logFile -ne $null -and $this.logfile -ne ''){
                 $eqn | add-content "$($this.logfile)"
             }
             try{
                 $sol = iex $eqn -errorAction silentlyContinue
                 if($sol -eq $search){
-                    write-host "$($eqn) --> $($sol)"
-                    return $true
+                    return $eqn
                 }
             }catch{}
-            return $false
+            return ''
         }
         
         [string] getEqn($a, $b, $c, $d, $e, $f, $g, $h){
@@ -98,9 +97,15 @@ Begin{
                                         for($g = 0; $g -lt 5; $g++){
                                             for($h = 0; $h -lt 5; $h++){
                                                 $iterations++
-                                                $eqn = $this.getEqn($a, $b, $c, $d, $e, $f, $g, $h)
-                                                if($this.testEqn($eqn, $search)){
+                                                if($iterations % 25 -eq 0){
+													write-host '.' -noNewLine
+												}
+												
+												$eqn = $this.getEqn($a, $b, $c, $d, $e, $f, $g, $h)
+												if($this.testEqn($eqn, $search) -ne ''){
                                                     $found = $true
+													write-host ""
+													write-host "$($eqn) --> $($search)"
                                                     write-host "Found at index: $($iterations)"
                                                     break search
                                                 }
@@ -120,12 +125,13 @@ Begin{
                                                     for($first = 0; $first -lt 7; $first++){
                                                         for($last = 8; $last -gt $first; $last--){
                                                             $eqn = $this.getEqn($a, $b, $c, $d, $e, $f, $g, $h, $first, $last)
-                                                            if($this.testEqn($eqn, $search)){
+                                                            if($this.testEqn($eqn, $search) -ne ''){
                                                                 $found = $true
-                                                                write-host "Found at index: $($iterations)"
+                                                                write-host ""
+																write-host "$($eqn) --> $($search)"
+																write-host "Found at index: $($iterations)"
                                                                 break search
                                                             }
-                                                            
                                                         }
                                                     }
                                                 }
