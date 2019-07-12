@@ -1,0 +1,108 @@
+Begin{
+    class seqRep{
+        $op = @(
+            '+',
+            '-',
+            '/',
+            '*',
+            ' '
+        )        
+        $numbers = @(1,2,3,4,5,6,7,8,9)
+        seqRep(){
+            "" | set-content "seqRep.log"
+        }
+        execute(){
+        
+            $eqn = ""
+            for($search = 0; $search -lt 10000; $search++){
+                write-host $search
+                $found = $false
+                :search for($a = 0; $a -lt 5; $a++){
+                    for($b = 0; $b -lt 5; $b++){
+                        for($c = 0; $c -lt 5; $c++){
+                            for($d = 0; $d -lt 5; $d++){
+                                for($e = 0; $e -lt 5; $e++){
+                                    for($f = 0; $f -lt 5; $f++){
+                                        for($g = 0; $g -lt 5; $g++){
+                                            for($h = 0; $h -lt 5; $h++){
+                                  
+                                                
+for($start = 0; $start -lt 7; $start++){
+    for($end = 8; $end -gt $start; $end--){
+        $template = ""
+        $index = 0;
+        $this.numbers | % {
+            if($index -eq $start){
+                $template += "("
+                
+            }
+            $template += "$($_)"
+            if($index -eq $end){
+                $template += ")"
+            }
+            switch($index){
+                0 {$template += $this.op[$a]}
+                1 {$template += $this.op[$b]}
+                2 {$template += $this.op[$c]}
+                3 {$template += $this.op[$d]}
+                4 {$template += $this.op[$e]}
+                5 {$template += $this.op[$f]}
+                6 {$template += $this.op[$g]}
+                7 {$template += $this.op[$h]}
+            }
+            
+            # write-host "'$($_)'"
+            $index++
+        }
+        
+        $template = $template -replace ' \(','*(' -replace '\) ',')*' -replace ' ',''
+
+        $eqn = $template
+        # $eqn | add-content "seqRep.log"
+        # write-host $eqn
+        try{
+            $sol = iex $eqn -errorAction silentlyContinue
+            if($sol -eq $search){
+                write-host $eqn "-->" $sol
+                $found = $true
+                break search
+            }
+        }catch{}
+        
+    }
+}
+                                                
+                                                
+                                                
+                                                
+                                                
+                                            }
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                    }
+                }
+                if(!$found){
+                    write-host "$($search) could not be found"
+                }
+            }
+        }
+    }
+}
+Process{
+    clear;
+    $error.clear()
+    $seqRep = [seqRep]::new();
+    $seqRep.execute()
+}
+End{
+
+}
+
+
